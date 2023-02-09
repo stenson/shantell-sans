@@ -8,8 +8,7 @@
 
 
 from coldtype import *
-from coldtype.drawbot import *
-from drawBot import *
+from coldtype.img.skiaimage import SkiaImage
 
 fnt = Font.Find(r"ShantellSans\[.*\]\.ttf", regex_dir="fonts")
 
@@ -19,6 +18,10 @@ VERSIONS = [
     dict(script="cyrillic", text="ТИПОГРАФИЯ\nКИНЕТИЧЕСКАЯ", fontSize=180),
 ] #/VERSIONS
 
+img_src = __sibling__("../../specimens/shantell_sans-hero_16x9.png")
+
+sk_img = SkiaImage(img_src)
+sk_img.resize(1920/sk_img.width())
 
 # @animation((1920, 720)
 @animation((1920, 1080)
@@ -28,14 +31,8 @@ VERSIONS = [
     # , release=lambda a: a.export("h264", open=0)
     , name="handwriting_" + __VERSION__["script"]
     )
-
 def kinetic4(f):
     def styler(g):
-
-        # Trying to add a test image to the background... not yet working
-        # img(src="/Users/stephennixon/type-repos/shantell-sans/specimens/shantell_sans-hero_16x9.png", rect=Rect(0, 0, 500, 500), pattern=False, opacity=0.5)
-
-
         if g.l == 0:
             return Style(fnt
                 , fontSize=__VERSION__["fontSize"]
@@ -56,4 +53,6 @@ def kinetic4(f):
         .xalign(f.a.r, tx=0)
         .lead(60)
         .align(f.a.r, tx=0)
-        .f(0))
+        .f(0)
+        .insert(0, P(f.a.r).f(1, 0.85)) # for opacity
+        .insert(0, sk_img))
